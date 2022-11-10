@@ -20,7 +20,9 @@ param
     [string] $PackagesDirectory = ".\build\packages",
     #
     [Parameter(Mandatory = $false)]
-    [string] $LicensePath = ".\LICENSE"
+    [string] $LicensePath = ".\LICENSE",
+
+    [bool] $SignModule = $true
 )
 
 Write-Debug @"
@@ -81,4 +83,6 @@ foreach ($package in $xmlPackagesConfig.packages.package) {
 Write-Output (Join-Path $ModuleOutputDirectoryInfo.FullName $ModuleManifestFileInfo.Name)
 
 ## Sign Module
-&$PSScriptRoot\Sign-PSModule.ps1 -ModuleManifestPath (Join-Path $ModuleOutputDirectoryInfo.FullName $ModuleManifestFileInfo.Name) | Format-Table Path, Status, StatusMessage
+if ($SignModule) {
+    &$PSScriptRoot\Sign-PSModule.ps1 -ModuleManifestPath (Join-Path $ModuleOutputDirectoryInfo.FullName $ModuleManifestFileInfo.Name) | Format-Table Path, Status, StatusMessage
+}
